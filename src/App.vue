@@ -2,8 +2,18 @@
     <!-- <div class="container"> -->
       <h1 class="text-center">Les Amis</h1>
       <ul class="list-group">
-        <un-ami v-for="ami in lesAmis" :key="ami.id" :leNom="ami.name" :lePhone="ami.phone" :leMail="ami.email"></un-ami>
-    </ul>
+        <new-ami @add-ami="ajouterAmi"></new-ami>
+        <un-ami v-for="ami in lesAmis" 
+            :key="ami.id"
+            :id="ami.id" 
+            :leNom="ami.name" 
+            :lePhone="ami.phone" 
+            :leMail="ami.email" 
+            :premium="ami.premium"
+            @toggle_premium="togglePremium"
+            @delete-ami="supprimerAmi"
+        ></un-ami>
+        </ul>
     <!-- </div> -->
   </template>
   
@@ -39,6 +49,33 @@ export default{
             ],
         }
     },
+    methods:{
+    togglePremium(str){
+        const amis = this.lesAmis;
+        const ami = amis.find(ami => ami.id === str);
+        console.log(ami);
+        if (ami) ami.premium = !ami.premium;
+    },
+    ajouterAmi(name,phone,email){
+      const newAmiContact = {
+        id:new Date().toISOString(),
+        name:name,
+        phone:phone,
+        email:email,
+        premium:false,
+      };
+      console.log(this.lesAmis);
+      this.lesAmis.push(newAmiContact);
+    },
+    supprimerAmi(str) {
+        const amis = this.lesAmis;
+        const vraisAmis = amis.filter(
+            (amigo) => amigo.id !== str
+        )
+        console.log(vraisAmis);
+        this.lesAmis = vraisAmis;
+    }
+  }
 }
 </script>
   
